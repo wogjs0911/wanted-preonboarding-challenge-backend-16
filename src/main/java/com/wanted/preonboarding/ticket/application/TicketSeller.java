@@ -50,4 +50,14 @@ public class TicketSeller {
         }
     }
 
+    public List<Reservation> getAllReservationList() {
+        return reservationRepository.findAll()
+                .stream()
+                .toList();
+    }
+
+    public Reservation getReservationDetail(String name, String phoneNumber) {
+        return reservationRepository.findByNameAndPhoneNumber(name, phoneNumber);
+    }
+
 }
