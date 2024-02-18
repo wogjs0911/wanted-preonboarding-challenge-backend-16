@@ -1,11 +1,12 @@
-package com.wanted.preonboarding.ticket.application;
+package com.wanted.preonboarding.ticket.reservation.application;
 
-import com.wanted.preonboarding.ticket.domain.dto.PerformanceInfo;
-import com.wanted.preonboarding.ticket.domain.dto.ReserveInfo;
-import com.wanted.preonboarding.ticket.domain.entity.Performance;
-import com.wanted.preonboarding.ticket.domain.entity.Reservation;
-import com.wanted.preonboarding.ticket.infrastructure.repository.PerformanceRepository;
-import com.wanted.preonboarding.ticket.infrastructure.repository.ReservationRepository;
+import com.wanted.preonboarding.ticket.performance.application.DiscountService;
+import com.wanted.preonboarding.ticket.performance.domain.entity.Performance;
+import com.wanted.preonboarding.ticket.performance.application.policy.DiscountPolicy;
+import com.wanted.preonboarding.ticket.performance.infrastructure.repository.PerformanceRepository;
+import com.wanted.preonboarding.ticket.reservation.domain.dto.ReserveInfo;
+import com.wanted.preonboarding.ticket.reservation.domain.entity.Reservation;
+import com.wanted.preonboarding.ticket.reservation.infrastructure.repository.ReservationRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,31 +17,21 @@ import java.util.List;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class TicketSeller {
+public class ReservationService {
     private final PerformanceRepository performanceRepository;
     private final ReservationRepository reservationRepository;
-    private long totalAmount = 0L;
+    private final DiscountService discountService;
 
-    public List<PerformanceInfo> getAllPerformanceInfoList() {
-        return performanceRepository.findByIsReserve("enable")
-            .stream()
-            .map(PerformanceInfo::of)
-            .toList();
-    }
-
-    public PerformanceInfo getPerformanceInfoDetail(String name) {
-        return PerformanceInfo.of(performanceRepository.findByName(name));
-    }
-
-    public boolean reserve(ReserveInfo reserveInfo) {
+    public boolean reserve(ReserveInfo reserveInfo, String discountType) {
         log.info("reserveInfo ID => {}", reserveInfo.getPerformanceId());
         Performance info = performanceRepository.findById(reserveInfo.getPerformanceId())
-            .orElseThrow(EntityNotFoundException::new);
+                .orElseThrow(EntityNotFoundException::new);
         String enableReserve = info.getIsReserve();
         if (enableReserve.equalsIgnoreCase("enable")) {
-            // 1. 결제
+            // 1. 결제 + 할인
             int price = info.getPrice();
-            reserveInfo.setAmount(reserveInfo.getAmount() - price);
+            long discountPrice = discountService.discount(price, discountType);
+            reserveInfo.setAmount(reserveInfo.getAmount() - discountPrice);
             // 2. 예매 진행
             reservationRepository.save(Reservation.of(reserveInfo));
             return true;

@@ -1,9 +1,8 @@
-package com.wanted.preonboarding.ticket.presentation;
+package com.wanted.preonboarding.ticket.reservation.presentation;
 
 import com.wanted.preonboarding.core.domain.response.ResponseHandler;
-import com.wanted.preonboarding.ticket.application.TicketSeller;
-import com.wanted.preonboarding.ticket.domain.dto.PerformanceInfo;
-import com.wanted.preonboarding.ticket.domain.entity.Reservation;
+import com.wanted.preonboarding.ticket.reservation.application.ReservationService;
+import com.wanted.preonboarding.ticket.reservation.domain.entity.Reservation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,37 +16,9 @@ import java.util.List;
 @RestController
 @RequestMapping("query")
 @RequiredArgsConstructor
-public class QueryController {
-    private final TicketSeller ticketSeller;
+public class QueryReservationController {
 
-    @GetMapping("/all/performance")
-    public ResponseEntity<ResponseHandler<List<PerformanceInfo>>> getAllPerformanceInfoList() {
-        System.out.println("getAllPerformanceInfoList");
-        return ResponseEntity
-            .ok()
-            .body(ResponseHandler.<List<PerformanceInfo>>builder()
-                .message("Success")
-                .statusCode(HttpStatus.OK)
-                .data(ticketSeller.getAllPerformanceInfoList())
-                .build()
-            );
-    }
-
-    @GetMapping("/performance")
-    public ResponseEntity<ResponseHandler<PerformanceInfo>> getPerformanceInfoDetail(
-            @RequestParam(name = "name", required = false) String name
-    ) {
-        System.out.println("getPerformanceInfoDetail");
-        return ResponseEntity
-                .ok()
-                .body(ResponseHandler.<PerformanceInfo>builder()
-                        .message("Success")
-                        .statusCode(HttpStatus.OK)
-                        .data(ticketSeller.getPerformanceInfoDetail(name))
-                        .build()
-                );
-    }
-
+    private final ReservationService reservationService;
 
     @GetMapping("/all/reservation")
     public ResponseEntity<ResponseHandler<List<Reservation>>> getAllReservationList() {
@@ -57,7 +28,7 @@ public class QueryController {
                 .body(ResponseHandler.<List<Reservation>>builder()
                         .message("Success")
                         .statusCode(HttpStatus.OK)
-                        .data(ticketSeller.getAllReservationList())
+                        .data(reservationService.getAllReservationList())
                         .build()
                 );
     }
@@ -73,9 +44,8 @@ public class QueryController {
                 .body(ResponseHandler.<Reservation>builder()
                         .message("Success")
                         .statusCode(HttpStatus.OK)
-                        .data(ticketSeller.getReservationDetail(name, phoneNumber))
+                        .data(reservationService.getReservationDetail(name, phoneNumber))
                         .build()
                 );
     }
-
 }

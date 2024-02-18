@@ -1,7 +1,7 @@
-package com.wanted.preonboarding.ticket.presentation;
+package com.wanted.preonboarding.ticket.reservation.presentation;
 
-import com.wanted.preonboarding.ticket.application.TicketSeller;
-import com.wanted.preonboarding.ticket.domain.dto.ReserveInfo;
+import com.wanted.preonboarding.ticket.reservation.application.ReservationService;
+import com.wanted.preonboarding.ticket.reservation.domain.dto.ReserveInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,14 +10,17 @@ import java.util.*;
 @RestController
 @RequestMapping("/reserve")
 @RequiredArgsConstructor
-public class ReserveController {
-    private final TicketSeller ticketSeller;
+public class ReservationController {
+    private final ReservationService reservationService;
 
-    @PostMapping("/")
-    public boolean reservation() {
+
+    @PostMapping("/{discountType}")
+    public boolean reservation(
+            @PathVariable("discountType") String discountType
+    ) {
         System.out.println("reservation");
 
-        return ticketSeller.reserve(ReserveInfo.builder()
+        return reservationService.reserve(ReserveInfo.builder()
             .performanceId(UUID.fromString("4438a3e6-b01c-11ee-9426-0242ac180002"))
             .reservationName("유진호")
             .reservationPhoneNumber("010-1234-1234")
@@ -27,6 +30,6 @@ public class ReserveController {
             .line('A')
             .seat(1)
             .build()
-        );
+        , discountType);
     }
 }

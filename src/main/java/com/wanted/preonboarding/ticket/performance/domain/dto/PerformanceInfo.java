@@ -1,6 +1,6 @@
-package com.wanted.preonboarding.ticket.domain.dto;
+package com.wanted.preonboarding.ticket.performance.domain.dto;
 
-import com.wanted.preonboarding.ticket.domain.entity.Performance;
+import com.wanted.preonboarding.ticket.performance.domain.entity.Performance;
 import lombok.Builder;
 import lombok.Data;
 
