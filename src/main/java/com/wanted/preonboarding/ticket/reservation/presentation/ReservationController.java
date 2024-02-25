@@ -1,5 +1,6 @@
 package com.wanted.preonboarding.ticket.reservation.presentation;
 
+import com.wanted.preonboarding.common.exception.ServiceException;
 import com.wanted.preonboarding.ticket.reservation.application.ReservationService;
 import com.wanted.preonboarding.ticket.reservation.domain.dto.ReserveInfo;
 import lombok.RequiredArgsConstructor;
@@ -13,15 +14,12 @@ import java.util.*;
 public class ReservationController {
     private final ReservationService reservationService;
 
-
-    @PostMapping("/{discountType}")
-    public boolean reservation(
-            @PathVariable("discountType") String discountType
-    ) {
+    @PostMapping
+    public boolean reservation() throws ServiceException {
         System.out.println("reservation");
 
         return reservationService.reserve(ReserveInfo.builder()
-            .performanceId(UUID.fromString("4438a3e6-b01c-11ee-9426-0242ac180002"))
+            .performanceId(UUID.fromString("7601e052-c440-11ee-9f73-0242ac150002"))
             .reservationName("유진호")
             .reservationPhoneNumber("010-1234-1234")
             .reservationStatus("reserve")
@@ -29,7 +27,7 @@ public class ReservationController {
             .round(1)
             .line('A')
             .seat(1)
-            .build()
-        , discountType);
+            .dType("AMT")
+            .build());
     }
 }

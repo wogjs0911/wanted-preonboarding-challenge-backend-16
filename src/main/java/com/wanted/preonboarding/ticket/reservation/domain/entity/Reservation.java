@@ -1,5 +1,6 @@
 package com.wanted.preonboarding.ticket.reservation.domain.entity;
 
+import com.wanted.preonboarding.common.exception.BaseResDto;
 import com.wanted.preonboarding.ticket.reservation.domain.dto.ReserveInfo;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -15,7 +16,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Reservation {
+public class Reservation extends BaseResDto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
